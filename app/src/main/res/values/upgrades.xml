@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!--  upgrades pattern  -->
+<!--  name | price | speed  -->
+<!--  Если тут менять что-то то нужно обновлять версию бд в DBHelper -->
+    <string-array name="upgrades">
+        <item>upgrade 0 | 15 | 0.1</item>
+        <item>upgrade 1 | 75 | 0.3</item>
+        <item>upgrade 2 | 375 | 1</item>
+        <item>upgrade 3 | 1875 | 3</item>
+        <item>upgrade 4 | 9375 | 10</item>
+        <item>upgrade 5 | 46875 | 30</item>
+        <item>upgrade 6 | 234375 | 100</item>
+        <item>upgrade 7 | 1171875 | 300</item>
+        <item>upgrade 8 | 123456789 | 3000</item>
+<!--        <item>upgrade 9 | 3999999999 | 999999</item>-->
+<!--        <item>upgrade 10 | 75000000000 | 10000000</item>-->
+    </string-array>
+</resources>
