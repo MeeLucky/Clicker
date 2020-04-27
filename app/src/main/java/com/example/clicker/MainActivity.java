@@ -25,7 +25,8 @@ public class MainActivity extends AppCompatActivity {
     double PlayerClickPower = 1;
     double PlayerScore = 0;
     double PlayerSpeed = 0.1;
-    int time = 0;
+    int time1 = 0;//for timer1
+    int time2 = 0;//for timer2
     public int ScreenWidth;
     public int ScreenHeight;
     public DBHelper dbhelper;
@@ -65,33 +66,78 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        // TIMER of score up and score show
-        final TextView scoreView = (TextView) findViewById(R.id.scoreView);
-        final TextView speedView = (TextView) findViewById(R.id.speedView);
-        Timer timer = new Timer();
-        long delay = 0;
-        long period = 1000;
-        timer.scheduleAtFixedRate(new TimerTask() {
+        // TIMER of score up
+        final TextView scoreView = findViewById(R.id.scoreView);
+        final TextView speedView = findViewById(R.id.speedView);
+        Timer timer1 = new Timer();
+        long timer1Delay = 0;
+        long timer1Period = 1000;
+        timer1.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                time++;
+                time1++;
                 runOnUiThread(new Runnable() {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void run() {
-                        //inc per second
+                        //score increment per second
                         PlayerScore += PlayerSpeed;
-                        //display it
-                        scoreView.setText(String.valueOf((int) PlayerScore));
-                        speedView.setText(String.valueOf((roundAvoid(PlayerSpeed, 2))) + "/sec");
                     }
                 });
             }
-        },delay,period);
+        }, timer1Delay, timer1Period);
+
+        // TIMER of score show
+        final String value = getResources().getString(R.string.app_score);
+        Timer timer2 = new Timer();
+        long timer2Delay = 0;
+        long timer2Period = 100;
+        timer2.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                time2++;
+                runOnUiThread(new Runnable() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void run() {
+                        //display score
+                        scoreView.setText(convert(PlayerScore));
+                        speedView.setText(convert(roundAvoid(PlayerSpeed, 2)) + "/sec");
+                    }
+                });
+            }
+        }, timer2Delay, timer2Period);
     }
 
+    private String convert(double n) {
+        //take double 100 000.2314 make  to 100k
+        String[] strs = String.valueOf(n).split("\\.");
+        String str = strs[0];
+        int l = str.length();
+
+        if(n < 100) return str+"."+strs[1].substring(0,1);
+
+
+        if(n < 10000) return str;
+
+        if(n > 9999 && n < 1000000) {
+            return str.substring(0, l-3) + "k";
+        }
+
+        if(n > 999999 && n < 1000000000) {
+            return str.substring(0, l-3) + "m";
+        }
+
+        //k, m, t, q
+        return str;
+    }
+
+    //Todo: сокращение результата с 100 000 до 100к и т.д.
+    //Todo: сохранение score при выходе
+    //Todo: работа в фоне
+    //Todo: need response from click
     //Todo: почему метот бай() кроме покупки ещё и проверяет возможность покупки, а itemListener пустует
-    //Todo: работу с бд можно новой функцией в БДХелпере. Тогда в связи с перыдущим todo буй исчезнет.
+    //Todo: работу с бд можно новой функцией в БДХелпере. Update("id = ?", new String[] {id}); Тогда в связи с перыдущим todo буй исчезнет.
     private void buy(String id, Upgrade up) {
         if(PlayerScore > up.getTotalPrice()) {
             PlayerScore = PlayerScore - up.getTotalPrice();
@@ -100,10 +146,10 @@ public class MainActivity extends AppCompatActivity {
                     ", TotalPrice: " + up.getTotalPrice() + ", BasePrice: " + up.getBasePrice());
 
             ContentValues cv = new ContentValues();
-            cv.put(dbhelper.KEY_LVL, up.getLVL() + 1);
+            cv.put(DBHelper.KEY_LVL, up.getLVL() + 1);
 
             SQLiteDatabase db = dbhelper.getWritableDatabase();
-            db.update(dbhelper.TABLE_UPGRADES, cv, "id = ?", new String[]{id});
+            db.update(DBHelper.TABLE_UPGRADES, cv, "id = ?", new String[]{id});
 
             db.close();
             updateRightMenu();
