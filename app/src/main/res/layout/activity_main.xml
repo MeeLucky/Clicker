@@ -9,7 +9,7 @@
     tools:context=".MainActivity"
     android:id="@+id/root"
     android:onClick="incScore">
-
+<!--Todo: в правое меню добавить скрол виев-->
     <LinearLayout
         android:id="@+id/rightMenu"
         app:layout_constraintLeft_toRightOf="parent"

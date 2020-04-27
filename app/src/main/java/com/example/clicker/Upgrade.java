@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 public class Upgrade {
     //коэффицент увелечения цены
     private double Multiplier = 1.07;
-
+    //Todo: обычные типы не подходят нужны биг десимал может и биг инт
     private String name;
     private int lvl = 0;
     private double speed;
