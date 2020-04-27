@@ -53,20 +53,19 @@ public class MainActivity extends AppCompatActivity {
 
         updateRightMenu();
 
+        //Right Menu Item Click Listener
         ListView upgradesList = findViewById(R.id.upgradeList);
         upgradesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int bdid = position+1;
                 Upgrade up = dbhelper.getOneUpgrade(bdid);
-//                Log.d("DEBUG", "BASEPRICE: "+up.getBasePrice()
-//                    +" TOTAL PRICE: "+up.getTotalPrice());
                 buy(String.valueOf(bdid), up);
             }
         });
 
 
-        // TIMER
+        // TIMER of score up and score show
         final TextView scoreView = (TextView) findViewById(R.id.scoreView);
         final TextView speedView = (TextView) findViewById(R.id.speedView);
         Timer timer = new Timer();
@@ -91,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
         },delay,period);
     }
 
+    //Todo: почему метот бай() кроме покупки ещё и проверяет возможность покупки, а itemListener пустует
+    //Todo: работу с бд можно новой функцией в БДХелпере. Тогда в связи с перыдущим todo буй исчезнет.
     private void buy(String id, Upgrade up) {
         if(PlayerScore > up.getTotalPrice()) {
             PlayerScore = PlayerScore - up.getTotalPrice();
